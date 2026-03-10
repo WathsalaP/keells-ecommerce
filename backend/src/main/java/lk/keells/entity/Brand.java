@@ -2,12 +2,10 @@ package lk.keells.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "brands")
+public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +18,8 @@ public class Category {
     @Column(length = 500)
     private String description;
 
-    // NEW: category image url (or /uploads/categories/xxx.png)
     @Column(length = 255)
-    private String imageUrl;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products = new ArrayList<>();
+    private String logoUrl;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,9 +30,6 @@ public class Category {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-
-    public List<Product> getProducts() { return products; }
-    public void setProducts(List<Product> products) { this.products = products; }
+    public String getLogoUrl() { return logoUrl; }
+    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
 }

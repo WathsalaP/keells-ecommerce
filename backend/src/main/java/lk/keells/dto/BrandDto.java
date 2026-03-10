@@ -1,12 +1,11 @@
 package lk.keells.dto;
 
-public class CategoryDto {
+public class BrandDto {
+
     private Long id;
     private String name;
     private String description;
-
-    // NEW
-    private String imageUrl;
+    private String logoUrl;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -17,6 +16,6 @@ public class CategoryDto {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getLogoUrl() { return logoUrl; }
+    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
 }

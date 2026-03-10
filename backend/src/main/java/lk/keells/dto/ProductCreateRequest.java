@@ -8,71 +8,46 @@ public class ProductCreateRequest {
     private BigDecimal price;
     private Integer stockQuantity;
     private String imageUrl;
+
+    // ✅ NEW
+    private BigDecimal weightValue;
+    private String weightUnit;
+
     private Long categoryId;
     private Long discountId;
+    private Long brandId;
     private Boolean active;
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getDescription() {
-        return description;
-    }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+    public BigDecimal getWeightValue() { return weightValue; }
+    public void setWeightValue(BigDecimal weightValue) { this.weightValue = weightValue; }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
-    }
+    public String getWeightUnit() { return weightUnit; }
+    public void setWeightUnit(String weightUnit) { this.weightUnit = weightUnit; }
 
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
-    }
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    public Long getDiscountId() { return discountId; }
+    public void setDiscountId(Long discountId) { this.discountId = discountId; }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    public Long getBrandId() { return brandId; }
+    public void setBrandId(Long brandId) { this.brandId = brandId; }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getDiscountId() {
-        return discountId;
-    }
-
-    public void setDiscountId(Long discountId) {
-        this.discountId = discountId;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

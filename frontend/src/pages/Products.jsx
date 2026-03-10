@@ -35,6 +35,7 @@ export default function Products() {
   return (
     <div className="container">
       <h1 style={{ marginBottom: '1rem' }}>Products</h1>
+
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         <button
           className={`btn ${!selectedCat ? 'btn-primary' : 'btn-outline'}`}
@@ -59,17 +60,28 @@ export default function Products() {
             <div className="product-image">
               {p.imageUrl ? <img src={p.imageUrl} alt={p.name} /> : <span>🛒</span>}
             </div>
+
             <div className="product-info">
               <h3>{p.name}</h3>
+
+              {/* ✅ NEW: show weight */}
+              {p.weightValue && p.weightUnit && (
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: 4 }}>
+                  {p.weightValue} {p.weightUnit}
+                </div>
+              )}
+
               {p.discountPercentage > 0 && (
                 <span className="discount-badge">{p.discountPercentage}% OFF</span>
               )}
+
               <div>
                 <span className="price">LKR {p.discountedPrice?.toFixed(2) || p.price?.toFixed(2)}</span>
                 {p.discountedPrice && p.discountedPrice < p.price && (
                   <span className="original-price">LKR {p.price?.toFixed(2)}</span>
                 )}
               </div>
+
               {!isAdmin && user && (
                 <button
                   className="btn btn-primary"

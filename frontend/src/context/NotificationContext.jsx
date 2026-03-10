@@ -1,36 +1,45 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useMemo, useState } from "react";
 
-const NotificationContext = createContext(null)
+const NotificationContext = createContext(null);
 
 export function NotificationProvider({ children }) {
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([]);
 
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id))
-  }
+  const showNotification = (message, type = "success") => {
+    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`; // ✅ unique
+    setNotifications((prev) => [...prev, { id, message, type }]);
 
-  const showNotification = useCallback((message, type = 'success') => {
-    const id = Date.now()
-    setNotifications((prev) => [...prev, { id, message, type }])
-    setTimeout(() => removeNotification(id), 4000)
-  }, [])
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }, 3000);
+  };
+
+  const value = useMemo(() => ({ showNotification }), []);
 
   return (
-    <NotificationContext.Provider value={{ showNotification }}>
+    <NotificationContext.Provider value={value}>
       {children}
-      <div className="notification-container">
+
+      <div style={{ position: "fixed", top: 20, right: 20, zIndex: 9999, display: "grid", gap: 10 }}>
         {notifications.map((n) => (
-          <div key={n.id} className={`notification ${n.type}`}>
-            {n.message}
+          <div
+            key={n.id}
+            className="card"
+            style={{
+              padding: "12px 14px",
+              minWidth: 260,
+              borderLeft: n.type === "success" ? "6px solid var(--keells-green)" : "6px solid var(--error)",
+            }}
+          >
+            <div style={{ fontWeight: 700, marginBottom: 4 }}>
+              {n.type === "success" ? "Success" : "Error"}
+            </div>
+            <div style={{ color: "var(--text-muted)" }}>{n.message}</div>
           </div>
         ))}
       </div>
     </NotificationContext.Provider>
-  )
+  );
 }
 
-export function useNotification() {
-  const ctx = useContext(NotificationContext)
-  if (!ctx) throw new Error('useNotification must be used within NotificationProvider')
-  return ctx
-}
+export const useNotification = () => useContext(NotificationContext);

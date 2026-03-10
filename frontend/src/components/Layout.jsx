@@ -1,16 +1,20 @@
-import { Outlet } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react'
 import api from '../api'
+import AIAssistantModal from './AIAssistantModal'
+import './ai/ai.css'
 
 export default function Layout() {
   const { user, logout, isAdmin } = useAuth()
   const [cartCount, setCartCount] = useState(0)
+  const [aiOpen, setAiOpen] = useState(false)
 
   const fetchCartCount = () => {
     if (user && !isAdmin) {
-      api.get('/user/cart').then(r => setCartCount(r.data?.totalItems || 0)).catch(() => setCartCount(0))
+      api.get('/user/cart')
+        .then(r => setCartCount(r.data?.totalItems || 0))
+        .catch(() => setCartCount(0))
     } else {
       setCartCount(0)
     }
@@ -23,11 +27,18 @@ export default function Layout() {
   return (
     <div className="layout">
       <header className="header">
-        <div className="header-inner">
-          <Link to="/" className="logo">Keells Delivery</Link>
+        <div className="header-inner" style={{ position: 'relative' }}>
+          <Link to="/" className="logo">
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              <span aria-hidden="true">🛒</span>
+              <span>Keells Delivery</span>
+            </span>
+          </Link>
+
           <nav className="nav">
             <Link to="/">Home</Link>
-            <Link to="/products">Products</Link>
+            <Link to="/products">Shop</Link>
+
             {user ? (
               <>
                 {!isAdmin && (
@@ -38,14 +49,17 @@ export default function Layout() {
                     <Link to="/orders">My Orders</Link>
                   </>
                 )}
+
                 {isAdmin && (
                   <>
                     <Link to="/admin">Dashboard</Link>
-                    <Link to="/admin/products">Products</Link>
+                    <Link to="/admin/products">Manage Products</Link>
+                    <Link to="/admin/brands">Brands</Link>
                     <Link to="/admin/orders">Orders</Link>
                     <Link to="/admin/users">Users</Link>
                   </>
                 )}
+
                 <button onClick={logout}>Logout</button>
               </>
             ) : (
@@ -55,11 +69,33 @@ export default function Layout() {
               </>
             )}
           </nav>
+
+          {user && !isAdmin && (
+            <button
+              type="button"
+              onClick={() => setAiOpen(true)}
+              className="ai-fab"
+              title="Keells AI Assistant"
+              aria-label="Open Keells AI Assistant"
+            >
+              <span className="ai-fab-spark" aria-hidden="true">✦</span>
+              <span className="ai-fab-text">AI</span>
+            </button>
+          )}
         </div>
       </header>
+
       <main className="main">
         <Outlet context={{ fetchCartCount }} />
       </main>
+
+      {user && !isAdmin && (
+        <AIAssistantModal
+          open={aiOpen}
+          onClose={() => setAiOpen(false)}
+          userFullName={user?.fullName || 'there'}
+        />
+      )}
     </div>
   )
 }

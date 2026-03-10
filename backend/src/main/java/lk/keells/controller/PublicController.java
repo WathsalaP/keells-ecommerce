@@ -1,16 +1,15 @@
 package lk.keells.controller;
 
+import lk.keells.dto.BrandDto;
 import lk.keells.dto.CategoryDto;
 import lk.keells.dto.DiscountDto;
 import lk.keells.dto.ProductDto;
+import lk.keells.service.BrandService;
 import lk.keells.service.CategoryService;
 import lk.keells.service.DiscountService;
 import lk.keells.service.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,15 +20,26 @@ public class PublicController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final DiscountService discountService;
+    private final BrandService brandService;
 
-    public PublicController(ProductService productService, CategoryService categoryService, DiscountService discountService) {
+    public PublicController(ProductService productService,
+                            CategoryService categoryService,
+                            DiscountService discountService,
+                            BrandService brandService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.discountService = discountService;
+        this.brandService = brandService;
     }
 
+    // ✅ Support: /public/products?brandId=1
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDto>> getAllActiveProducts() {
+    public ResponseEntity<List<ProductDto>> getAllActiveProducts(
+            @RequestParam(value = "brandId", required = false) Long brandId
+    ) {
+        if (brandId != null) {
+            return ResponseEntity.ok(productService.getProductsByBrand(brandId));
+        }
         return ResponseEntity.ok(productService.getAllActiveProducts());
     }
 
@@ -51,5 +61,11 @@ public class PublicController {
     @GetMapping("/discounts")
     public ResponseEntity<List<DiscountDto>> getAllActiveDiscounts() {
         return ResponseEntity.ok(discountService.getAllActiveDiscounts());
+    }
+
+    // ✅ Brands for Home page
+    @GetMapping("/brands")
+    public ResponseEntity<List<BrandDto>> getAllBrands() {
+        return ResponseEntity.ok(brandService.getAllBrands());
     }
 }

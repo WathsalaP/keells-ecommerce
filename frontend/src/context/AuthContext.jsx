@@ -41,10 +41,13 @@ export function AuthProvider({ children }) {
     showNotification('Logged out successfully', 'success')
   }
 
+  // ✅ expose token for ai-service calls
+  const getToken = () => localStorage.getItem('token')
+
   const isAdmin = user?.role === 'ADMIN'
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin, getToken }}>
       {children}
     </AuthContext.Provider>
   )

@@ -31,6 +31,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProductDto> getProductsByBrand(Long brandId) {
+        return productRepository.findByBrandIdAndActiveTrue(brandId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public ProductDto getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -45,17 +51,35 @@ public class ProductService {
         dto.setPrice(p.getPrice());
         dto.setStockQuantity(p.getStockQuantity());
         dto.setImageUrl(p.getImageUrl());
-        dto.setCategoryId(p.getCategory().getId());
-        dto.setCategoryName(p.getCategory().getName());
+
+        // ✅ weight
+        dto.setWeightValue(p.getWeightValue());
+        dto.setWeightUnit(p.getWeightUnit());
+
+        if (p.getCategory() != null) {
+            dto.setCategoryId(p.getCategory().getId());
+            dto.setCategoryName(p.getCategory().getName());
+        }
+
+        if (p.getBrand() != null) {
+            dto.setBrandId(p.getBrand().getId());
+            dto.setBrandName(p.getBrand().getName());
+            dto.setBrandLogo(p.getBrand().getLogoUrl());
+        }
 
         BigDecimal discountedPrice = p.getPrice();
         if (p.getDiscount() != null && p.getDiscount().isActive()) {
             BigDecimal discount = p.getDiscount().getPercentage();
             dto.setDiscountId(p.getDiscount().getId());
             dto.setDiscountPercentage(discount.doubleValue());
-            discountedPrice = p.getPrice().multiply(BigDecimal.ONE.subtract(discount.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)));
+
+            discountedPrice = p.getPrice()
+                    .multiply(BigDecimal.ONE.subtract(
+                            discount.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+                    ));
         }
         dto.setDiscountedPrice(discountedPrice.setScale(2, RoundingMode.HALF_UP));
+
         return dto;
     }
 }

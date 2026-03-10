@@ -18,7 +18,8 @@ public class CategoryService {
     }
 
     public List<CategoryDto> getAllCategories() {
-        return categoryRepository.findAll().stream()
+        return categoryRepository.findAll()
+                .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -28,6 +29,7 @@ public class CategoryService {
         dto.setId(c.getId());
         dto.setName(c.getName());
         dto.setDescription(c.getDescription());
+        dto.setImageUrl(c.getImageUrl()); // NEW
         return dto;
     }
 }

@@ -1,5 +1,7 @@
 package lk.keells.controller;
 
+import jakarta.validation.Valid;
+import lk.keells.dto.CategoryCreateRequest;
 import lk.keells.dto.CategoryDto;
 import lk.keells.entity.Category;
 import lk.keells.repository.CategoryRepository;
@@ -23,25 +25,30 @@ public class AdminCategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAll() {
-        return ResponseEntity.ok(categoryRepository.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(
+                categoryRepository.findAll()
+                        .stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> create(@RequestBody CategoryRequest req) {
+    public ResponseEntity<CategoryDto> create(@Valid @RequestBody CategoryCreateRequest req) {
         Category c = new Category();
         c.setName(req.getName());
         c.setDescription(req.getDescription());
+        c.setImageUrl(req.getImageUrl()); // NEW
         c = categoryRepository.save(c);
         return ResponseEntity.ok(toDto(c));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryRequest req) {
+    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @Valid @RequestBody CategoryCreateRequest req) {
         Category c = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
         c.setName(req.getName());
         c.setDescription(req.getDescription());
+        c.setImageUrl(req.getImageUrl()); // NEW
         c = categoryRepository.save(c);
         return ResponseEntity.ok(toDto(c));
     }
@@ -57,15 +64,7 @@ public class AdminCategoryController {
         dto.setId(c.getId());
         dto.setName(c.getName());
         dto.setDescription(c.getDescription());
+        dto.setImageUrl(c.getImageUrl()); // NEW
         return dto;
-    }
-
-    public static class CategoryRequest {
-        private String name;
-        private String description;
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public String getDescription() { return description; }
-        public void setDescription(String description) { this.description = description; }
     }
 }
